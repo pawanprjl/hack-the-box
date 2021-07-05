@@ -4,7 +4,7 @@
 This box was pretty easy linux box with a well known vulnerability on Drupal 7. With that said, let's dive into it.
 
 ### 1. Enumeration
-When i joined the machine, I got an *ip_address* of `10.10.10.233`. Taking a sneak peak at the source code, I found out that this was a `Drupal` website.
+When i joined the machine, I got an *ip_address* of `10.10.10.233`. The first thing i did was to look if a website is present. I fired up my browser and checked the url with given ip address. There was a website with some footer saying `Powered By Armageddon`. I searched for any CMS provider with that name but found nothing. Then i took a sneak peek at the source code finding that this was a `Drupal` website.
 
 ![](images/2021-07-05-19-44-01.png)
 
