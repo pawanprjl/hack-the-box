@@ -6,7 +6,7 @@ This box was an easy box where you are needed to exploit popular vulnerability i
 ### 1. Enumeration
 When i joined the box, i was given the ip address of box as `10.10.10.242`. As always, i started with my `nmap` scan
 ```
-> nmap -sC -sV -oA 10.10.10.242 -oN nmap_initial
+> nmap -sC -sV -A 10.10.10.242 -oN nmap_initial
 ```
 
 ![](images/2021-07-21-09-07-00.png)

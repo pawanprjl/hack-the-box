@@ -6,7 +6,7 @@ This box was on the category of easy god knows why cause i did not feel anything
 ### 1. Enumeration
 When i joined the box, i got an ip address of `10.10.10.100`. As usual I fired up my terminal and started a `nmap` scan for top ports and all ports.
 ```bash
-> nmap -sC -sV -T4 -oA -oN nmap_initial 10.10.10.100
+> nmap -sC -sV -T4 -A -oN nmap_initial 10.10.10.100
 > nmap -sC -sV -T4 -p- nmap_all_ports 10.10.10.100
 ```
 And while the scans were running i went to see if a website is present at the given url but there wasn't any. Finally our first nmap scan produced some output:
