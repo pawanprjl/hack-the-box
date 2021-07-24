@@ -33,7 +33,7 @@ And Lastly we know that we have access to manager and host-manager from the http
 
 ![](images/2021-07-22-21-56-39.png)
 
-Well we should have access to it as said in the README then I thought maybe we have access to some other endpoint in manager.
+Well we should have access to it as said in the `README` then I thought maybe we have access to some other endpoint in manager.
 So let's fuzz and see we know that it is tomcat so it's better to use specialized wordlist for that.
 I am using one from the seclist which you can find at the below link.
 https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/tomcat.txt
@@ -45,12 +45,12 @@ https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-C
 ![](images/2021-07-22-21-59-04.png)
 
 Looks like we can access https://seal.htb/manager/status.xsd
-and also we have have https://seal.htb/manager/jmxproxy
+and also we have https://seal.htb/manager/jmxproxy
 and yeah it's asked from creds so let's go on finding those in some previous commit as we know that it is using old tomcat configuration from the README.md file.
 
 Looking through commits on this repo we have 13 commit which wouldn't be much to look through.
 http://seal.htb:8080/root/seal_market/commits/master
-The commit looks intresting in our context which is adding 'adding tomcat configuration' and 'updating tomcat configuration' as we know that updating configuration is probably the current version let's check 'adding tomcat configuration' first.
+The commit looks intresting in our context which is 'adding tomcat configuration' and 'updating tomcat configuration' as we know that updating configuration is probably the current version let's check 'adding tomcat configuration' first.
 
 We can see that there is a file named tomcat-user.xml, where we find some credentials.
 
@@ -82,7 +82,10 @@ Now listen to any connection on our mentioned port
 ```
 and trigger the rev shell. And boom we have the reverse shell.
 
-We quickly find that the **user.txt** file is in `/home/luis/` but we cannot view as a tomcat user which we are authorized as. Looking at the process running this thing caught my eye as there was .ansible directory in luis home directory and there a process running as luis probably a backup service.
+We quickly find that the **user.txt** file is in `/home/luis/` but we cannot view as a tomcat user which we are authorized as. Looking at the process running, this thing caught my eye as there was .ansible directory in luis home directory and there is a process running as luis probably a backup service.
+```bash
+> ps -aux
+```
 
 ![](images/2021-07-23-21-02-24.png)
 
@@ -104,13 +107,13 @@ Taking a look at run.yml,
 ```
 The intresting part in this thing is that it also copies the symblink also as it has copy_links=yes. So this gave me an idea to create a symblink of file or folder. Looking at the permission of the folder we can see that we have read and write access only to subfolder i.e. we can write in `uploads` folder.
 
-Now we have to think of what to symlink so we know the user luis have .ssh directory so that might be intresting so let's try that.
+Now we have to think of what to symlink. So we know the user luis have .ssh directory so that might be intresting so let's try that.
 ```
 > ln -s /home/luis/.ssh /var/lib/tomcat9/webapps/ROOT/admin/dashboard/uploads
 ```
 
 Now wait for it to create the new archive.
-After that creates the new archive it usually takes about a minute to do so be patient.
+After that creates the new archive it usually takes about a minute to do so, so be patient.
 After you have the archive just move it to /dev/shm cause you cannot extract the archive in that folder as it is read only.
 ```
 > cp backup-2021-07-23-15:35:33.gz /dev/shm/back.gz
@@ -148,7 +151,15 @@ A little google search let us know that we can create a yml file and use it to r
   - name : root
     command : chmod +s /bin/bash
 ```
+Let's execute this yml file,
+```bash
+> sudo ansible-playbook root.yml
+```
+
 Now let's run that suid bit `/bin/bash`
+```bash
+> /bin/bash -p
+```
 
 ![](images/2021-07-23-21-32-29.png)
 
